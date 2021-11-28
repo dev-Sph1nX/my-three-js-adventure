@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three JS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+</body>
+<script type="module">
+    import * as THREE from 'https://cdn.skypack.dev/three@';
+
+    var scene;
+    var renderer;
+    var camera;
+    var cube;
+
+    function init() {
+        scene = new THREE.Scene();
+
+        // ---------------- RENDERER ----------------
+
+        renderer = new THREE.WebGLRenderer({ antialias: true }); // antialiasing, une fonctionnalité permettant de lisser les contours des objets 3D.
+        renderer.setPixelRatio(window.devicePixelRatio); // utilisée pour définir un ratio entre la taille de l’écran et le nombre de pixels
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement); // we add the HTML element to the HTML page
+
+        // ---------------- CAMERA ----------------
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000); // PerspectiveCamera(FOV, Aspect, Distance minimale, Distance maximale)
+        camera.position.set(-500, 400, -500); // X,Y,Z
+        camera.lookAt(new THREE.Vector3(0, 0, 0)); // Orientation camera
+        scene.add(camera);
+
+        // ---------------- LIGHTS ----------------
+
+        var ambientLight = new THREE.AmbientLight(0xcccccc, 0.2);
+        // AmbientLight(couleur de l'eclairage, intensité) - illumine de manière égale l’intégralité des objets de la scène
+        scene.add(ambientLight);
+
+        var directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        // DirectionalLight(couleur de l'eclairage, intensité) - simule une source lumineuse émise dans une direction, et est ainsi capable de créer des effets de lumière.
+        scene.add(directionalLight);
+
+        // ---------------- 3D CUBE ----------------
+
+        //const geometry = new THREE.BoxGeometry(150, 150, 150); //BoxGeometry(largeur, hauteur, profondeur)
+
+        //const geometry = new THREE.ConeGeometry( 150, 150, 16 ); //ConeGeometry( Rayon Hauteur Complexité de la structure )
+
+        //const geometry = new THREE.CylinderGeometry( 150, 150, 300, 8, 4 );
+
+        //const geometry = new THREE.PlaneGeometry( 250, 150, 2, 2 );
+        //const material = new THREE.MeshPhongMaterial( {color: 0x00ffff, side : THREE.DoubleSide} ); //Pour le plane geometry
+
+        const geometry = new THREE.SphereGeometry( 250, 32, 32 );
+        
+        const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
+        cube = new THREE.Mesh(geometry, material); //Le cube sera créé par défaut au centre le la scène (0, 0 , 0) XYZ.
+        scene.add(cube);
+
+        render();
+    }
+
+    function render() {
+        // rotating the cube each render tick
+        cube.rotation.x += 0.02;
+        cube.rotation.y += 0.01;
+
+        renderer.render(scene, camera); // We are rendering the 3D world
+
+        requestAnimationFrame(render); // we are calling render() again,  to loop
+    }
+
+    init();
+</script>
+
+</html>
